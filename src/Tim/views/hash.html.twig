@@ -1,0 +1,15 @@
+{% extends 'layout.html.twig' %}
+
+{% if form is defined %}
+    {% form_theme form 'form/fields.twig' %}
+{% endif %}
+
+{% block content %}
+    <div class="starter-template">
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {{ form(form, {'action': path('hash'), 'method': 'POST'}) }}
+        </div>
+    </div>
+{% endblock %}
