@@ -87,21 +87,22 @@ $app->match('/', function(Request $request) use ($app) {
         'email' => '',
         'message' => '',
     );
+    $result = array();
 
     $form = $app['form.factory']->createBuilder('form', $default)
-        ->add('name', 'text', array(
-            'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 3))),
-            'attr' => array('class' => 'form-control', 'placeholder' => 'Your Name')
+        ->add('text', 'text', array(
+            'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 3, 'max' => '4096'))),
+            'attr' => array('class' => 'form-control', 'placeholder' => 'Text')
         ))
-        ->add('email', 'email', array(
-            'constraints' => new Assert\Email(),
-            'attr' => array('class' => 'form-control', 'placeholder' => 'Your@email.com')
+        ->add('salt', 'text', array(
+            'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 3, 'max' => '4096'))),
+            'attr' => array('class' => 'form-control', 'placeholder' => 'Salt')
         ))
-        ->add('message', 'textarea', array(
+        /*->add('message', 'textarea', array(
             'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 20))),
             'attr' => array('class' => 'form-control', 'placeholder' => 'Enter Your Message')
-        ))
-        ->add('send', 'submit', array(
+        ))*/
+        ->add('send', 'submit', array('label' => 'Generate',
             'attr' => array('class' => 'btn btn-default')
         ))
         ->getForm();
@@ -118,10 +119,18 @@ $app->match('/', function(Request $request) use ($app) {
             ->setBody($data['message']);
         */
         // $app['mailer']->send($message);
+
+        $text = $data['text'];
+        $salt = $data['salt'];
+
+        $result[] = array('alg' => 'md5(Text)', 'res' => md5($text));
+        $result[] = array('alg' => 'md5(Text.Salt)', 'res' => md5($text.$salt));
+
         $hash = true;
     }
 
-    return $app['twig']->render('hash.html.twig', array('form' => $form->createView(), 'hash' => $hash));
+    return $app['twig']->render('hash.html.twig', array('form' => $form->createView(), 'hash' => $hash,
+        'result' => $result));
 })->bind('hash');
 
 /*$app->get('/hello', function () use ($app) {
