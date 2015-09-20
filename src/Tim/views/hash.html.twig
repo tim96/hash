@@ -5,11 +5,38 @@
 {% endif %}
 
 {% block content %}
-    <div class="starter-template">
-    </div>
     <div class="row">
         <div class="col-md-12">
             {{ form(form, {'action': path('hash'), 'method': 'POST'}) }}
         </div>
     </div>
+
+    {# {% if (form.vars.errors|length < 1) %}
+        {{ 'text example' }}
+    {% endif %}
+    {{ form.isNew }}
+    {{ form.isSubmitted }}
+    {{ form.isValid }} #}
+    {#{% if form.vars.valid %}
+        {{ 'text example' }}
+    {% endif %}#}
+
+    {% if hash %}
+    <div class="hash-result-body">
+        <div class="row">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    Hash result
+                </div>
+                <div class="panel-body">
+                    {% for item in result %}
+                        <div class="row">
+                            <div class="col-md-2"><h4>{{ item.alg }}</h4></div><div class="col-md-10"><h4><strong>{{ item.res }}</strong></h4></div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
