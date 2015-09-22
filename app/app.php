@@ -94,8 +94,8 @@ $app->match('/', function(Request $request) use ($app) {
             'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 3, 'max' => '4096'))),
             'attr' => array('class' => 'form-control', 'placeholder' => 'Text')
         ))
-        ->add('salt', 'text', array(
-            'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 3, 'max' => '4096'))),
+        ->add('salt', 'text', array('required' => false,
+            'constraints' => new Assert\Length(array('min' => 0, 'max' => '4096')),
             'attr' => array('class' => 'form-control', 'placeholder' => 'Salt')
         ))
         /*->add('message', 'textarea', array(
