@@ -120,11 +120,28 @@ $app->match('/', function(Request $request) use ($app) {
         */
         // $app['mailer']->send($message);
 
+
         $text = $data['text'];
         $salt = $data['salt'];
 
-        $result[] = array('alg' => 'md5(Text)', 'res' => md5($text));
-        $result[] = array('alg' => 'md5(Text.Salt)', 'res' => md5($text.$salt));
+        // todo: rewrite to expressions:
+
+        $algorithms = array();
+        $algorithms[] = array('md5' => array('Text' => '(Text)', 'Value' => $text));
+        $algorithms[] = array('md5' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
+        $algorithms[] = array('md5' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
+        $algorithms[] = array('sha1' => array('Text' => '(Text)', 'Value' => $text));
+        $algorithms[] = array('sha1' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
+        $algorithms[] = array('sha1' => array('Text' => '(Salt.Textt)', 'Value' => $salt.$text));
+
+        foreach($algorithms as $alg) {
+            foreach($alg as $key => $value) {
+                $result[] = array('alg' => $key.$value['Text'], 'res' => call_user_func($key, $value['Value']));
+            }
+        }
+
+        // $result[] = array('alg' => 'md5(Text)', 'res' => md5($text));
+        // $result[] = array('alg' => 'md5(Text.Salt)', 'res' => md5($text.$salt));
 
         $hash = true;
     }
