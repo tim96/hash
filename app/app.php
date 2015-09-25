@@ -97,6 +97,9 @@ $app->match('/', function(Request $request) use ($app) {
         $algorithms[] = array('sha512' => array('Text' => '(Text)', 'Value' => $text));
         $algorithms[] = array('sha512' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
         $algorithms[] = array('sha512' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
+        $algorithms[] = array('sha256' => array('Text' => '(Text)', 'Value' => $text));
+        $algorithms[] = array('sha256' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
+        $algorithms[] = array('sha256' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
 
         foreach($algorithms as $alg) {
             foreach($alg as $key => $value) {
