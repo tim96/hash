@@ -90,7 +90,13 @@ $app->match('/', function(Request $request) use ($app) {
         $algorithms[] = array('md5' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
         $algorithms[] = array('sha1' => array('Text' => '(Text)', 'Value' => $text));
         $algorithms[] = array('sha1' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
-        $algorithms[] = array('sha1' => array('Text' => '(Salt.Textt)', 'Value' => $salt.$text));
+        $algorithms[] = array('sha1' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
+        $algorithms[] = array('crc32' => array('Text' => '(Text)', 'Value' => $text));
+        $algorithms[] = array('crc32' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
+        $algorithms[] = array('crc32' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
+        $algorithms[] = array('sha512' => array('Text' => '(Text)', 'Value' => $text));
+        $algorithms[] = array('sha512' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
+        $algorithms[] = array('sha512' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
 
         foreach($algorithms as $alg) {
             foreach($alg as $key => $value) {
