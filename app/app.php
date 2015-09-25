@@ -103,6 +103,7 @@ $app->match('/', function(Request $request) use ($app) {
 
         foreach($algorithms as $alg) {
             foreach($alg as $key => $value) {
+                // todo: add check function between using
                 $result[] = array('alg' => $key.$value['Text'], 'res' => call_user_func($key, $value['Value']));
             }
         }
