@@ -95,6 +95,57 @@ $app->get('/base64', function() use ($app) {
     return $app['twig']->render('layout.html.twig');
 })->bind('base64');
 
+$app->match('/random', function(Request $request) use ($app) {
+
+    $result = null;
+    $default = array(
+        'length' => 64
+    );
+
+    $form = $app['form.factory']->createBuilder('form', $default)
+        ->add('length', 'integer', array(
+            'constraints' => array(new Assert\NotBlank(), new Assert\Range(array('min' => 1))),
+            'attr' => array('class' => 'form-control', 'placeholder' => 'Length Random Text')
+        ))
+        ->add('send', 'submit', array('label' => 'Generate',
+            'attr' => array('class' => 'btn btn-default')
+        ))
+        ->getForm();
+
+    $form->handleRequest($request);
+
+    if($form->isValid()) {
+        $data = $form->getData();
+
+        function getRand($length) {
+            switch (true) {
+                case function_exists("mcrypt_create_iv") :
+                    $r = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
+                    break;
+                case function_exists("openssl_random_pseudo_bytes") :
+                    $r = openssl_random_pseudo_bytes($length);
+                    break;
+                case is_readable('/dev/urandom') : // deceze
+                    $r = file_get_contents('/dev/urandom', false, null, 0, $length);
+                    break;
+                default :
+                    $i = 0;
+                    $r = "";
+                    while($i ++ < $length) {
+                        $r .= chr(mt_rand(0, 255));
+                    }
+                    break;
+            }
+            return substr(bin2hex($r), 0, $length);
+        }
+
+        $result = getRand($data['length']);
+    }
+
+    return $app['twig']->render('random.html.twig', array('form' => $form->createView(), 'result' => $result));
+})->bind('random');
+
+
 $app->match('/', function(Request $request) use ($app) {
 
     $hash = false;
