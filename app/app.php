@@ -94,6 +94,9 @@ $app->match('/', function(Request $request) use ($app) {
         $algorithms[] = array('crc32' => array('Text' => '(Text)', 'Value' => $text));
         $algorithms[] = array('crc32' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
         $algorithms[] = array('crc32' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
+        $algorithms[] = array('crc32b' => array('Text' => '(Text)', 'Value' => $text));
+        $algorithms[] = array('crc32b' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
+        $algorithms[] = array('crc32b' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
         $algorithms[] = array('sha512' => array('Text' => '(Text)', 'Value' => $text));
         $algorithms[] = array('sha512' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
         $algorithms[] = array('sha512' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
@@ -104,7 +107,11 @@ $app->match('/', function(Request $request) use ($app) {
         foreach($algorithms as $alg) {
             foreach($alg as $key => $value) {
                 // todo: add check function between using
-                $result[] = array('alg' => $key.$value['Text'], 'res' => call_user_func($key, $value['Value']));
+                if (function_exists($key)) {
+                    $result[] = array('alg' => $key . $value['Text'], 'res' => call_user_func($key, $value['Value']));
+                } else {
+                    $result[] = array('alg' => $key . $value['Text'], 'res' => hash($key, $value['Value']));
+                }
             }
         }
 
