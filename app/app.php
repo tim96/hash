@@ -128,27 +128,14 @@ $app->match('/', function(Request $request) use ($app) {
         $salt = $data['salt'];
 
         // todo: rewrite to expressions:
-
         $algorithms = array();
-        $algorithms[] = array('md5' => array('Text' => '(Text)', 'Value' => $text));
-        $algorithms[] = array('md5' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
-        $algorithms[] = array('md5' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
-        $algorithms[] = array('sha1' => array('Text' => '(Text)', 'Value' => $text));
-        $algorithms[] = array('sha1' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
-        $algorithms[] = array('sha1' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
-        $algorithms[] = array('crc32' => array('Text' => '(Text)', 'Value' => $text));
-        $algorithms[] = array('crc32' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
-        $algorithms[] = array('crc32' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
-        $algorithms[] = array('crc32b' => array('Text' => '(Text)', 'Value' => $text));
-        $algorithms[] = array('crc32b' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
-        $algorithms[] = array('crc32b' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
-        $algorithms[] = array('sha512' => array('Text' => '(Text)', 'Value' => $text));
-        $algorithms[] = array('sha512' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
-        $algorithms[] = array('sha512' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
-        $algorithms[] = array('sha256' => array('Text' => '(Text)', 'Value' => $text));
-        $algorithms[] = array('sha256' => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
-        $algorithms[] = array('sha256' => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
+        foreach (hash_algos() as $v) {
+            $algorithms[] = array($v => array('Text' => '(Text)', 'Value' => $text));
+            $algorithms[] = array($v => array('Text' => '(Text.Salt)', 'Value' => $text.$salt));
+            $algorithms[] = array($v => array('Text' => '(Salt.Text)', 'Value' => $salt.$text));
+        }
 
+        $time = microtime(true);
         foreach($algorithms as $alg) {
             foreach($alg as $key => $value) {
                 if (function_exists($key)) {
@@ -158,12 +145,13 @@ $app->match('/', function(Request $request) use ($app) {
                 }
             }
         }
+        $time = microtime(true) - $time;
 
         $hash = true;
     }
 
     return $app['twig']->render('hash.html.twig', array('form' => $form->createView(), 'hash' => $hash,
-        'result' => $result));
+        'result' => $result, 'time' => $time));
 })->bind('hash');
 
 return $app;
