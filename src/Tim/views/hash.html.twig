@@ -23,7 +23,7 @@
 
     {% if hash %}
     <div class="hash-result-body">
-        <div class="row">
+        {#<div class="row">
             <div class="panel panel-success">
                 <div class="panel-heading">
                     Hash result
@@ -36,6 +36,19 @@
                     {% endfor %}
                 </div>
             </div>
+        </div>#}
+        <div class="row">
+            <table class="table table-striped">
+                <thead><h2>Hash result</h2></thead>
+                <tbody>
+                    {% for item in result %}
+                        <tr>
+                            <td><h4>{{ item.alg }}</h4></td>
+                            <td><h4><strong>{{ item.res }}</strong></h4></td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     {% endif %}
