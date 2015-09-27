@@ -46,6 +46,51 @@ $app->get('/json', function() use ($app) {
     return $app['twig']->render('layout.html.twig');
 })->bind('json');
 
+$app->match('/password', function(Request $request) use ($app) {
+
+    $result = null;
+    $default = array(
+        'count' => 1,
+        'minLength' => 1
+    );
+
+    $form = $app['form.factory']->createBuilder('form', $default)
+        ->add('count', 'integer', array(
+            'constraints' => array(new Assert\NotBlank(), new Assert\Range(array('min' => 1, 'max' => 25))),
+            'attr' => array('class' => 'form-control', 'placeholder' => 'Count')
+        ))
+        ->add('minLength', 'integer', array(
+            'constraints' => array(new Assert\NotBlank(), new Assert\Range(array('min' => 1, 'max' => 25))),
+            'attr' => array('class' => 'form-control', 'placeholder' => 'Min Password Length')
+        ))
+        ->add('usingChars', 'checkbox', array('required' => false,
+            'constraints' => array(new Assert\Type(array('type' => 'bool'))),
+            'attr' => array('class' => 'form-control', 'placeholder' => 'Using chars')
+        ))
+        ->add('usingSpecialChars', 'checkbox', array('required' => false,
+            'constraints' => array(new Assert\Type(array('type' => 'bool'))),
+            'attr' => array('class' => 'form-control', 'placeholder' => 'Using special chars')
+        ))
+        ->add('send', 'submit', array('label' => 'Generate Passwords',
+            'attr' => array('class' => 'btn btn-default')
+        ))
+        ->getForm();
+
+    $form->handleRequest($request);
+
+    if($form->isValid()) {
+        $data = $form->getData();
+
+        $count = $data['count'];
+        for($i = 0; $i <= $count; $i++) {
+            // todo: add function to generate password
+            $result[] = 'dsadsa';
+        }
+    }
+
+    return $app['twig']->render('password.html.twig', array('form' => $form->createView(), 'result' => $result));
+})->bind('password');
+
 $app->get('/base64', function() use ($app) {
     return $app['twig']->render('layout.html.twig');
 })->bind('base64');
@@ -106,7 +151,6 @@ $app->match('/', function(Request $request) use ($app) {
 
         foreach($algorithms as $alg) {
             foreach($alg as $key => $value) {
-                // todo: add check function between using
                 if (function_exists($key)) {
                     $result[] = array('alg' => $key . $value['Text'], 'res' => call_user_func($key, $value['Value']));
                 } else {
