@@ -1,0 +1,27 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="comment">The JSON Validator </label>
+            <textarea class="form-control" rows="5" id="json_text" placeholder="Enter JSON to validate"></textarea>
+        </div>
+        <button id="button" type="button" class="btn btn-default">Check</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function(){
+        $("#button").click(function () {
+            var text = $('#json_text').val();
+            if (!text) {
+                alert('Enter JSON to validate');
+            }
+
+            
+        });
+    }, false);
+</script>
+{% endblock %}
