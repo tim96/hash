@@ -56,11 +56,11 @@ $app->match('/password', function(Request $request) use ($app) {
 
     $form = $app['form.factory']->createBuilder('form', $default)
         ->add('count', 'integer', array(
-            'constraints' => array(new Assert\NotBlank(), new Assert\Range(array('min' => 1, 'max' => 25))),
+            'constraints' => array(new Assert\NotBlank(), new Assert\Range(array('min' => 1, 'max' => 100))),
             'attr' => array('class' => 'form-control', 'placeholder' => 'Count')
         ))
         ->add('length', 'integer', array(
-            'constraints' => array(new Assert\NotBlank(), new Assert\Range(array('min' => 1, 'max' => 25))),
+            'constraints' => array(new Assert\NotBlank(), new Assert\Range(array('min' => 1, 'max' => 100))),
             'attr' => array('class' => 'form-control', 'placeholder' => 'Password Length')
         ))
         ->add('usingChars', 'checkbox', array('required' => false,
@@ -84,7 +84,7 @@ $app->match('/password', function(Request $request) use ($app) {
         $data = $form->getData();
 
         $sets = array();
-        $sets[] = '23456789';
+        $sets[] = '123456789';
         if($data['usingChars'])
             $sets[] = 'abcdefghjkmnpqrstuvwxyz';
         if($data['usingChars'])
@@ -106,15 +106,16 @@ $app->match('/password', function(Request $request) use ($app) {
                 $password .= $all[array_rand($all)];
             $password = str_shuffle($password);
 
+            /* Add - in result string
             $dash_len = floor(sqrt($length));
             $dash_str = '';
             while(strlen($password) > $dash_len)
             {
                 $dash_str .= substr($password, 0, $dash_len) . '-';
                 $password = substr($password, $dash_len);
-            }
-            $dash_str .= $password;
-            return $dash_str;
+            }*/
+            // $dash_str .= $password;
+            return $password;
         }
 
         $count = $data['count'];
@@ -196,6 +197,7 @@ $app->match('/', function(Request $request) use ($app) {
         'message' => '',
     );
     $result = array();
+    $time = null;
 
     $form = $app['form.factory']->createBuilder('form', $default)
         ->add('text', 'text', array(
