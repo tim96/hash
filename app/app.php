@@ -43,7 +43,7 @@ $app->before(function (Request $request) use ($app) {
 });
 
 $app->get('/json', function() use ($app) {
-    return $app['twig']->render('layout.html.twig');
+    return $app['twig']->render('json.html.twig');
 })->bind('json');
 
 $app->match('/password', function(Request $request) use ($app) {
