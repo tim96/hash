@@ -50,8 +50,8 @@ $app->match('/password', function(Request $request) use ($app) {
 
     $result = null;
     $default = array(
-        'count' => 1,
-        'minLength' => 1
+        'count' => 10,
+        'length' => 10
     );
 
     $form = $app['form.factory']->createBuilder('form', $default)
@@ -59,17 +59,19 @@ $app->match('/password', function(Request $request) use ($app) {
             'constraints' => array(new Assert\NotBlank(), new Assert\Range(array('min' => 1, 'max' => 25))),
             'attr' => array('class' => 'form-control', 'placeholder' => 'Count')
         ))
-        ->add('minLength', 'integer', array(
+        ->add('length', 'integer', array(
             'constraints' => array(new Assert\NotBlank(), new Assert\Range(array('min' => 1, 'max' => 25))),
-            'attr' => array('class' => 'form-control', 'placeholder' => 'Min Password Length')
+            'attr' => array('class' => 'form-control', 'placeholder' => 'Password Length')
         ))
         ->add('usingChars', 'checkbox', array('required' => false,
             'constraints' => array(new Assert\Type(array('type' => 'bool'))),
-            'attr' => array('class' => 'form-control', 'placeholder' => 'Using chars')
+            'attr' => array('class' => 'form-control', 'placeholder' => 'Using chars', 'style' => 'max-width: 100px')
         ))
         ->add('usingSpecialChars', 'checkbox', array('required' => false,
             'constraints' => array(new Assert\Type(array('type' => 'bool'))),
-            'attr' => array('class' => 'form-control', 'placeholder' => 'Using special chars')
+            'attr' => array(
+                'class' => 'form-control', 'placeholder' => 'Using special chars',
+                'style' => 'max-width: 100px')
         ))
         ->add('send', 'submit', array('label' => 'Generate Passwords',
             'attr' => array('class' => 'btn btn-default')
@@ -81,10 +83,45 @@ $app->match('/password', function(Request $request) use ($app) {
     if($form->isValid()) {
         $data = $form->getData();
 
+        $sets = array();
+        $sets[] = '23456789';
+        if($data['usingChars'])
+            $sets[] = 'abcdefghjkmnpqrstuvwxyz';
+        if($data['usingChars'])
+            $sets[] = 'ABCDEFGHJKMNPQRSTUVWXYZ';
+        if($data['usingSpecialChars'])
+            $sets[] = '!@#$%&*?';
+
+        function generatePassword($length, $sets)
+        {
+            $all = '';
+            $password = '';
+            foreach($sets as $set)
+            {
+                $password .= $set[array_rand(str_split($set))];
+                $all .= $set;
+            }
+            $all = str_split($all);
+            for($i = 0; $i < $length - count($sets); $i++)
+                $password .= $all[array_rand($all)];
+            $password = str_shuffle($password);
+
+            $dash_len = floor(sqrt($length));
+            $dash_str = '';
+            while(strlen($password) > $dash_len)
+            {
+                $dash_str .= substr($password, 0, $dash_len) . '-';
+                $password = substr($password, $dash_len);
+            }
+            $dash_str .= $password;
+            return $dash_str;
+        }
+
         $count = $data['count'];
-        for($i = 0; $i <= $count; $i++) {
-            // todo: add function to generate password
-            $result[] = 'dsadsa';
+        $length = $data['length'];
+
+        for($i = 0; $i < $count; $i++) {
+            $result[] = generatePassword($length, $sets);
         }
     }
 
@@ -120,7 +157,11 @@ $app->match('/random', function(Request $request) use ($app) {
         function getRand($length) {
             switch (true) {
                 case function_exists("mcrypt_create_iv") :
-                    $r = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
+                    if (PHP_VERSION_ID >= 50300) {
+                        $r = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
+                    } else {
+                        $r = mcrypt_create_iv($length, MCRYPT_RAND);
+                    }
                     break;
                 case function_exists("openssl_random_pseudo_bytes") :
                     $r = openssl_random_pseudo_bytes($length);
