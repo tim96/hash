@@ -129,8 +129,43 @@ $app->match('/password', function(Request $request) use ($app) {
     return $app['twig']->render('password.html.twig', array('form' => $form->createView(), 'result' => $result));
 })->bind('password');
 
-$app->get('/base64', function() use ($app) {
-    return $app['twig']->render('layout.html.twig');
+$app->match('/base64', function(Request $request) use ($app) {
+
+    $result = null;
+    $default = array();
+
+    $choices = array('fromBase64' => 'Base64 to String', 'toBase64' => 'String to Base64');
+
+    $form = $app['form.factory']->createBuilder('form', $default)
+        ->add('text', 'textarea', array(
+            'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 3, 'max' => '800000'))),
+            'attr' => array('class' => 'form-control', 'placeholder' => 'Text')
+        ))
+        ->add('fromBase64', 'choice', array(
+            'choices'  => $choices,
+            'constraints' => array(new Assert\Choice(array('choices' => array_keys($choices)))),
+            'attr' => array('class' => 'form-control', 'placeholder' => 'Choose an option'),
+            'required' => true,
+        ))
+        ->add('send', 'submit', array('label' => 'Convert',
+            'attr' => array('class' => 'btn btn-default')
+        ))
+        ->getForm();
+
+    $form->handleRequest($request);
+
+    if($form->isValid()) {
+        $data = $form->getData();
+
+        $value = $data['fromBase64'];
+        if ($value == 'fromBase64') {
+            $result = base64_decode($data['text']);
+        } else {
+            $result = base64_encode($data['text']);
+        }
+    }
+
+    return $app['twig']->render('base64.html.twig', array('form' => $form->createView(), 'result' => $result));
 })->bind('base64');
 
 $app->match('/random', function(Request $request) use ($app) {
