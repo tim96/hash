@@ -8,7 +8,6 @@
 
 use Silex\Provider\FormServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
 
 require_once __DIR__.'/../vendor/autoload.php';
@@ -27,16 +26,9 @@ $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
 }));
 
 $app->register(new Silex\Provider\ValidatorServiceProvider());
-$app->register(new Silex\Provider\TranslationServiceProvider(), array(
-    'translator.domains' => array(),
-));
+$app->register(new Silex\Provider\TranslationServiceProvider(), array('translator.domains' => array(),));
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
-
 $app->register(new FormServiceProvider());
-
-$app->before(function (Request $request) use ($app) {
-    $app['twig']->addGlobal('active', $request->get("_route"));
-});
 
 $app->before(function (Request $request) use ($app) {
     $app['twig']->addGlobal('active', $request->get("_route"));
@@ -106,15 +98,6 @@ $app->match('/password', function(Request $request) use ($app) {
                 $password .= $all[array_rand($all)];
             $password = str_shuffle($password);
 
-            /* Add - in result string
-            $dash_len = floor(sqrt($length));
-            $dash_str = '';
-            while(strlen($password) > $dash_len)
-            {
-                $dash_str .= substr($password, 0, $dash_len) . '-';
-                $password = substr($password, $dash_len);
-            }*/
-            // $dash_str .= $password;
             return $password;
         }
 
@@ -135,7 +118,6 @@ $app->match('/base64', function(Request $request) use ($app) {
     $default = array();
 
     $choices = array('fromBase64' => 'Base64 to String', 'toBase64' => 'String to Base64');
-
     $form = $app['form.factory']->createBuilder('form', $default)
         ->add('text', 'textarea', array(
             'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 3, 'max' => '800000'))),
@@ -256,7 +238,6 @@ $app->match('/', function(Request $request) use ($app) {
         $text = $data['text'];
         $salt = $data['salt'];
 
-        // todo: rewrite to expressions:
         $algorithms = array();
         foreach (hash_algos() as $v) {
             $algorithms[] = array($v => array('Text' => '(Text)', 'Value' => $text));
