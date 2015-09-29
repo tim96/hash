@@ -11,6 +11,7 @@
         <button id="button" type="button" class="btn btn-default">Check</button>
     </div>
     <div class="col-md-12" style="margin-top:10px;">
+        <h2>Result JSON Validator: </h2>
         <pre id="result"></pre>
     </div>
 </div>
@@ -46,7 +47,7 @@
                     document.getElementById("result").innerHTML = "JSON is valid!";
                     document.getElementById("result").className = "pass";
                     // if (document.getElementById("reformat").checked) {
-                        document.getElementById("json_text").value = JSON.stringify(result, null, "  ");
+                    document.getElementById("json_text").value = JSON.stringify(result, null, "  ");
                     // }
                 }
             } catch(e) {
