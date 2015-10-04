@@ -204,6 +204,10 @@ $app->match('/random', function(Request $request) use ($app) {
     return $app['twig']->render('random.html.twig', array('form' => $form->createView(), 'result' => $result));
 })->bind('random');
 
+$app->match('/about', function(Request $request) use ($app) {
+    return $app['twig']->render('about.html.twig', array());
+})->bind('about');
+
 
 $app->match('/', function(Request $request) use ($app) {
 

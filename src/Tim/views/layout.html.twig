@@ -43,6 +43,11 @@
                     <a href="{{ path('base64') }}">Base64</a>
                 </li>
             </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li{% if active == 'about' %} class="active"{% endif %}>
+                    <a href="{{ path('about') }}">About</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
