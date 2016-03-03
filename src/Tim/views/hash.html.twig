@@ -11,50 +11,29 @@
         </div>
     </div>
 
-    {# {% if (form.vars.errors|length < 1) %}
-        {{ 'text example' }}
-    {% endif %}
-    {{ form.isNew }}
-    {{ form.isSubmitted }}
-    {{ form.isValid }} #}
-    {#{% if form.vars.valid %}
-        {{ 'text example' }}
-    {% endif %}#}
-
     {% if hash %}
-    <div class="hash-result-body">
-        {#<div class="row">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    Hash result
+        <div class="container">
+            <div class="hash-result-body">
+                <div class="row">
+                    <h2>Hash result</h2>
                 </div>
-                <div class="panel-body">
+                <!-- todo: add color block and background -->
+                <div class="row">
                     {% for item in result %}
-                        <div class="row">
-                            <div class="col-md-2"><h4>{{ item.alg }}</h4></div><div class="col-md-10"><h4><strong>{{ item.res }}</strong></h4></div>
+                        <div class="col-md-2">
+                            <h4>{{ item.alg }}</h4>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="wordwrap">
+                                <h4><strong>{{ item.res }}</strong></h4>
+                            </div>
                         </div>
                     {% endfor %}
                 </div>
+                <div class="row">
+                    Time: <strong>{{ time*1000 }}</strong> microseconds
+                </div>
             </div>
-        </div>#}
-        <div class="row">
-            <table class="table table-striped">
-                <thead><h2>Hash result</h2></thead>
-                <tbody>
-                    {% for item in result %}
-                        <tr>
-                            <td><h4>{{ item.alg }}</h4></td>
-                            <td><h4><strong>{{ item.res }}</strong></h4></td>
-                        </tr>
-                    {% endfor %}
-                    <tr>
-                        <td colspan="2">
-                            Time: {{ time*1000 }} microseconds
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
-    </div>
     {% endif %}
 {% endblock %}
