@@ -24,3 +24,7 @@ $app->error(function (\Exception $e, $code) use ($debug) {
 
     return new Response($message);
 });
+
+// $env = $debug ? 'dev' : 'prod';
+// $app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__."/../config/$env.json"));
+$app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__."/../config/config.json"));
