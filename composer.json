@@ -8,6 +8,7 @@
         "symfony/security-csrf": "2.*",
         "symfony/validator": "2.*",
         "symfony/config": "2.*",
-        "symfony/translation": "2.*"
+        "symfony/translation": "2.*",
+        "igorw/config-service-provider": "^1.2"
     }
 }
