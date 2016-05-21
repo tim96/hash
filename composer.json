@@ -1,14 +1,15 @@
 {
     "require": {
-        "silex/silex": "1.*",
+        "silex/silex": "2.*",
         "twig/twig": "1.*",
-        "symfony/twig-bridge": "2.*",
         "swiftmailer/swiftmailer": "5.*",
         "symfony/form": "2.*",
         "symfony/security-csrf": "2.*",
         "symfony/validator": "2.*",
         "symfony/config": "2.*",
         "symfony/translation": "2.*",
-        "igorw/config-service-provider": "^1.2"
+        "saxulum/config-service-provider": "2.0.x-dev",
+        "symfony/twig-bridge": "^3.0",
+        "symfony/asset": "^3.0"
     }
 }
