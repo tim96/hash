@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 $debug = $app['debug'];
 $app->error(function (\Exception $e, $code) use ($debug) {
+//    var_dump($e->getMessage());
+
     switch ($code) {
         case 404:
             $message = 'The requested page could not be found.';

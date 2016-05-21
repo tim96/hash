@@ -18,16 +18,14 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../src/Tim/views',
 ));
 
-$app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
-    $twig->addFunction(new \Twig_SimpleFunction('asset', function ($asset) use ($app) {
-        return sprintf('%s/%s', trim($app['request']->getBasePath()), ltrim($asset, '/'));
-    }));
-    return $twig;
-}));
+$app->register(new Silex\Provider\AssetServiceProvider(), array(
+    'assets.version' => 'v1',
+));
 
 $app->register(new Silex\Provider\ValidatorServiceProvider());
-$app->register(new Silex\Provider\TranslationServiceProvider(), array('translator.domains' => array(),));
-$app->register(new Silex\Provider\UrlGeneratorServiceProvider());
+$app->register(new Silex\Provider\TranslationServiceProvider(), array(
+    'translator.domains' => array(), 'locale_fallbacks' => array('en'), 'locale' => 'en'));
+$app->register(new Silex\Provider\RoutingServiceProvider());
 $app->register(new FormServiceProvider());
 
 $app->before(function (Request $request) use ($app) {
