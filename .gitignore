@@ -36,5 +36,4 @@
 # Composer PHAR
 /composer.phar
 .idea/
-composer.lock
 app/config/config.json
