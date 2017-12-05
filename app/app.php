@@ -110,6 +110,23 @@ $app->match('/password', function(Request $request) use ($app) {
     return $app['twig']->render('password.html.twig', array('form' => $form->createView(), 'result' => $result));
 })->bind('password');
 
+$app->match('/uuid', function(Request $request) use ($app) {
+
+    $uuids = [];
+    $uuids[] = ['name' => 'uuid1', 'value' => \Ramsey\Uuid\Uuid::uuid1()->toString()];
+
+    $ns = \Ramsey\Uuid\Uuid::uuid1()->toString();
+    $name = 'test_name_3';
+    $uuids[] = ['name' => 'uuid3', 'value' => \Ramsey\Uuid\Uuid::uuid3($ns, $name)->toString()];
+    $uuids[] = ['name' => 'uuid4', 'value' => \Ramsey\Uuid\Uuid::uuid4()->toString()];
+
+    $ns = \Ramsey\Uuid\Uuid::uuid1()->toString();
+    $name = 'test_name_5';
+    $uuids[] = ['name' => 'uuid5', 'value' => \Ramsey\Uuid\Uuid::uuid5($ns, $name)->toString()];
+
+    return $app['twig']->render('uuid.html.twig', array('uuids' => $uuids));
+})->bind('uuid');
+
 $app->match('/base64', function(Request $request) use ($app) {
 
     $result = null;
