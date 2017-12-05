@@ -1,6 +1,6 @@
 {
     "require": {
-        "silex/silex": "2.*",
+        "silex/silex": "2.0.*",
         "twig/twig": "1.*",
         "swiftmailer/swiftmailer": "5.*",
         "symfony/form": "2.*",
@@ -10,6 +10,14 @@
         "symfony/translation": "2.*",
         "saxulum/config-service-provider": "2.0.x-dev",
         "symfony/twig-bridge": "^3.0",
-        "symfony/asset": "^3.0"
+        "symfony/asset": "^3.0",
+        "pimple/pimple": "3.0.*",
+        "symfony/debug": "3.*",
+        "symfony/event-dispatcher": "3.*",
+        "symfony/filesystem": "3.*",
+        "symfony/http-foundation": "3.*",
+        "symfony/intl": "3.0.*",
+        "symfony/routing": "3.1.*",
+        "symfony/http-kernel": "3.1.*"
     }
 }
