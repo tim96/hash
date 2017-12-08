@@ -30,12 +30,14 @@
                 <!-- todo: add color block and background -->
                 <div class="row">
                     {% for item in result %}
-                        <div class="col-md-2">
-                            <h4>{{ item.alg }}</h4>
-                        </div>
-                        <div class="col-md-10">
-                            <div class="wordwrap">
-                                <h4><strong>{{ item.res }}</strong></h4>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <h4>{{ item.alg }}</h4>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="wordwrap">
+                                    <h4><strong>{{ item.res }}</strong></h4>
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
